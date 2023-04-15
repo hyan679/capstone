@@ -11,7 +11,7 @@ database = "masterdb"
 '''
 #database of our group
 #cloned from public database
-host = "ec2-3-26-74-1.ap-southeast-2.compute.amazonaws.com"
+host = "119.91.210.228"
 port = 3306
 user = "root"
 password = "SeartenMarketplaceftw2021"

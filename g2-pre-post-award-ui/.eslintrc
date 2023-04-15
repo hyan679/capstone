@@ -1,0 +1,7 @@
+{
+  "extends": ["react-app", "eslint:recommended"],
+  "rules": {
+    "no-unused-vars": "off",
+    "no-debugger": "off"
+  }
+}

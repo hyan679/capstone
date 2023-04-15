@@ -3,7 +3,7 @@ from flaskr.db import *
 
 bp = Blueprint('user', __name__, url_prefix='/users')
 
-@bp.route('/login', methods=['POST'])
+@bp.route('/login', methods=['POST'], strict_slashes=False)
 def login():
     #in fact , "email" is unique so email is true username in IT
     #"user_name" means the name of user. Different users can have some "user_name" 
@@ -23,7 +23,7 @@ def login():
         return jsonify(user_info)
     return jsonify()
 
-@bp.route('')
+@bp.route('/', strict_slashes=False)
 def getUsers():
     # get parameter
     user_id = int(request.headers.get('user_id'))

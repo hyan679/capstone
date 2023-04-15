@@ -4,7 +4,7 @@ from datetime import datetime
 bp = Blueprint('application', __name__, url_prefix='/applications')
 
 
-@bp.route('')
+@bp.route('/', strict_slashes=False)
 def getApplicationList():
     status = request.values.get('status')
     user_id = request.headers.get('user_id')
@@ -19,7 +19,7 @@ def getApplicationList():
     return jsonify(res)
 
 
-@bp.route('/<int:application_id>')
+@bp.route('/<int:application_id>', strict_slashes=False)
 def getApplication(application_id):
     role = request.headers.get('user_role').lower()
     user_id = int(request.headers.get('user_id'))
@@ -43,7 +43,7 @@ def getApplication(application_id):
     return jsonify()
 
 
-@bp.route('/<int:application_id>', methods=['PUT'])
+@bp.route('/<int:application_id>', methods=['PUT'], strict_slashes=False)
 def saveApplication(application_id):
     content = request.json.get('content')
     sql = f"UPDATE application SET content = '{content}', altered_time='{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}'  WHERE application_id = {application_id};"
@@ -53,7 +53,7 @@ def saveApplication(application_id):
         return jsonify({'ok':0})
     return jsonify({'ok':1})
 
-@bp.route('/<int:application_id>', methods=['POST'])
+@bp.route('/<int:application_id>', methods=['POST'], strict_slashes=False)
 def submitApplication(application_id):
     state = request.json.get('state')
     content = request.json.get('content')
@@ -72,7 +72,7 @@ def submitApplication(application_id):
     return jsonify({'ok':1})
 
 
-@bp.route('/<int:application_id>/status')
+@bp.route('/<int:application_id>/status', strict_slashes=False)
 def getApplicationStatus(application_id):
     user_id = int(request.headers.get('user_id'))# get parameter
     role = request.headers.get('user_role').lower()
@@ -90,7 +90,7 @@ def getApplicationStatus(application_id):
     return jsonify()
 
 
-@bp.route('/<int:application_id>/ranks', methods=['POST'])
+@bp.route('/<int:application_id>/ranks', methods=['POST'], strict_slashes=False)
 def rankApplication(application_id):
     user_id = int(request.headers.get('user_id'))
     before_id = request.json.get('before')
@@ -114,7 +114,7 @@ def rankApplication(application_id):
         return jsonify({'ok':0})
     return jsonify({'ok':1})
 
-@bp.route('/<int:application_id>/approve', methods=['POST'])
+@bp.route('/<int:application_id>/approve', methods=['POST'], strict_slashes=False)
 def approveApplication(application_id):
     user_id = int(request.headers.get('user_id'))
     status = int(request.json.get('status'))
@@ -135,7 +135,7 @@ def approveApplication(application_id):
     return jsonify({'ok':1})
 
 
-@bp.route('/approver')
+@bp.route('/approver', strict_slashes=False)
 def getApplicationTask():
     user_id = int(request.headers.get('user_id'))
     sql = f"SELECT a.*, p.*,rank,da.user_id, aa.* FROM application a\
@@ -149,7 +149,7 @@ def getApplicationTask():
     res = getdata(sql, 'all')
     return jsonify(res)
 
-@bp.route('/<int:application_id>/colloborators')
+@bp.route('/<int:application_id>/colloborators', strict_slashes=False)
 def getColloboratorList(application_id):
     user_id = request.headers.get('user_id')
     sql = f"SELECT distinct user_id, permission, user_name, organization FROM researcher_application natural join application natural join user WHERE application_id = '{application_id}';"
@@ -164,7 +164,7 @@ def getColloboratorList(application_id):
 
 
 #for researcher, Create
-@bp.route('/<int:application_id>/colloborators', methods=['POST'])
+@bp.route('/<int:application_id>/colloborators', methods=['POST'], strict_slashes=False)
 def inviteColloborator(application_id):
     user_id = request.json.get('user_id')
     permission = request.json.get('permission')
@@ -187,7 +187,7 @@ def inviteColloborator(application_id):
         return jsonify({'ok':1})
 
 #for researcher, Update
-@bp.route('/<int:application_id>/colloborators', methods=['PUT'])
+@bp.route('/<int:application_id>/colloborators', methods=['PUT'], strict_slashes=False)
 def assignColloboratorPermission(application_id):
     permission = request.json.get('permission')
     user_id = request.json.get('user_id')
@@ -199,7 +199,7 @@ def assignColloboratorPermission(application_id):
         return jsonify({'ok':0})
 
 #for researcher, Delete
-@bp.route('/<int:application_id>/colloborators', methods=['DELETE'])
+@bp.route('/<int:application_id>/colloborators', methods=['DELETE'], strict_slashes=False)
 def deleteColloborator(application_id):
     user_id = request.json.get('user_id')
     sql = f"SELECT distinct agreement_id from application join project using(project_id) join agreement using(project_id)  where application_id = {application_id}"
@@ -224,7 +224,7 @@ def deleteColloborator(application_id):
         return jsonify({'ok':1})
 
 #for director, Create
-@bp.route('/<int:application_id>/approvers', methods=['POST'])
+@bp.route('/<int:application_id>/approvers', methods=['POST'], strict_slashes=False)
 def inviteApplicationApprover(application_id):
     approver_id = request.json.get('user_id')
     try:
@@ -244,7 +244,7 @@ def inviteApplicationApprover(application_id):
         return jsonify({'ok':1})
 
 #for director, Delete
-@bp.route('/<int:application_id>/approvers', methods=['DELETE'])
+@bp.route('/<int:application_id>/approvers', methods=['DELETE'], strict_slashes=False)
 def deleteApplicationApprover(application_id):
     approver_id = request.json.get('user_id')
     try:

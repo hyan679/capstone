@@ -1,0 +1,40 @@
+version: "3.4"
+services: 
+  frontend:
+    build: 
+      context: ./g2-pre-post-award-ui
+      dockerfile: Dockerfile
+    expose: 
+      - 80
+    ports:
+      - 80:3000
+    depends_on:
+      - backend
+      - db
+
+  backend: 
+    build: 
+      context: ./g2-pre-post-award-api
+      dockerfile: Dockerfile
+    expose: 
+      - 5000
+    ports:
+      - 5000:5000
+    depends_on: 
+      - db
+
+  db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: SeartenMarketplaceftw2021
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: SeartenMarketplaceftw2021
+      MYSQL_DATABASE: masterdb
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - ./g2-pre-post-award-db/mysql_scripts:/docker-entrypoint-initdb.d
+      - ./g2-pre-post-award-db/volumes:/var/lib/mysql
+

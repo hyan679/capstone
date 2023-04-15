@@ -2,7 +2,7 @@ from flask import request, jsonify,Blueprint
 from flaskr.db import *
 bp = Blueprint('project', __name__, url_prefix='/projects')
 
-@bp.route('')
+@bp.route('/', strict_slashes=False)
 def getProjectList():
     user_id = int(request.headers.get('user_id'))
     role = request.values.get('role').lower()
@@ -16,7 +16,7 @@ def getProjectList():
     res = getdata(sql, 'all')
     return jsonify(res)
 
-@bp.route('/<int:project_id>')
+@bp.route('/<int:project_id>', strict_slashes=False)
 def getProjectInfo(project_id):
     # get parameter
     user_id = int(request.headers.get('user_id'))
@@ -52,7 +52,7 @@ def getProjectInfo(project_id):
         return jsonify(role_info)
     return jsonify()
 
-@bp.route('/<int:project_id>/agreements', methods=['POST'])
+@bp.route('/<int:project_id>/agreements', methods=['POST'], strict_slashes=False)
 def createProjectAgreement(project_id):
     sql1 = f"INSERT INTO agreement (agreement_id, project_id, content, version, agr_state, created_time)\
         VALUES ({project_id}, {project_id}, '', 1, 0, '{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}');"

@@ -4,7 +4,7 @@ from datetime import datetime
 bp = Blueprint('agreement', __name__, url_prefix='/agreements')
 
 
-@bp.route('')
+@bp.route('/', strict_slashes=False)
 def getAgreementList():
     user_id = int(request.headers.get('user_id'))
     status = request.values.get('status')
@@ -22,7 +22,7 @@ def getAgreementList():
     return jsonify(res)
 
 
-@bp.route('/<int:agreement_id>')
+@bp.route('/<int:agreement_id>', strict_slashes=False)
 def getAgreement(agreement_id):
     role = request.headers.get('user_role').lower()
     user_id = request.headers.get('user_id')
@@ -49,7 +49,7 @@ def getAgreement(agreement_id):
     return jsonify(res)
 
 
-@bp.route('/<int:agreement_id>/status')
+@bp.route('/<int:agreement_id>/status', strict_slashes=False)
 def getAgreementStatus(agreement_id):
     user_id = int(request.headers.get('user_id'))# get parameter
     role = request.headers.get('user_role').lower()
@@ -66,7 +66,7 @@ def getAgreementStatus(agreement_id):
 
 
 #for director
-@bp.route('/<int:agreement_id>/ranks', methods=['POST'])
+@bp.route('/<int:agreement_id>/ranks', methods=['POST'], strict_slashes=False)
 def rankAgreement(agreement_id):
     user_id = int(request.headers.get('user_id'))
     before_id = int(request.json.get('before'))
@@ -92,7 +92,7 @@ def rankAgreement(agreement_id):
 
 
 #for approver
-@bp.route('/<int:agreement_id>/approve', methods=['POST'])
+@bp.route('/<int:agreement_id>/approve', methods=['POST'], strict_slashes=False)
 def approveAgreement(agreement_id):
     user_id = int(request.headers.get('user_id'))
     status = int(request.json.get('status'))
@@ -113,7 +113,7 @@ def approveAgreement(agreement_id):
     return jsonify({'ok':1})
 
 #for approver
-@bp.route('/approver')
+@bp.route('/approver', strict_slashes=False)
 def getAgreementTask():
     user_id = int(request.headers.get('user_id'))
     sql = f"SELECT a.*, p.*,rank, permission, agr_status FROM agreement a \
@@ -131,7 +131,7 @@ def getAgreementTask():
 
 
 #for researcher, Create
-@bp.route('/<int:agreement_id>/colloborators', methods=['POST'])
+@bp.route('/<int:agreement_id>/colloborators', methods=['POST'], strict_slashes=False)
 def inviteAgreementColloborator(agreement_id):
     user_id = request.json.get('user_id')
     permission = request.json.get('permission')
@@ -156,7 +156,7 @@ def inviteAgreementColloborator(agreement_id):
 
 
 #for researcher, Update
-@bp.route('/<int:agreement_id>/colloborators', methods=['PUT'])
+@bp.route('/<int:agreement_id>/colloborators', methods=['PUT'], strict_slashes=False)
 def assignAgrColloboratorPermission(agreement_id):
     permission = request.json.get('permission')
     user_id = request.json.get('user_id')
@@ -170,7 +170,7 @@ def assignAgrColloboratorPermission(agreement_id):
 
 
 #for researcher, Read
-@bp.route('/<int:agreement_id>/colloborators')
+@bp.route('/<int:agreement_id>/colloborators', strict_slashes=False)
 def getAgrColloboratorList(agreement_id):
     user_id = request.headers.get('user_id')
     sql = f"SELECT user_id, permission, user_name, organization FROM researcher_agreement join user using(user_id) WHERE agreement_id = {agreement_id};"
@@ -185,7 +185,7 @@ def getAgrColloboratorList(agreement_id):
 
 
 #for researcher, Delete
-@bp.route('/<int:agreement_id>/colloborators', methods=['DELETE'])
+@bp.route('/<int:agreement_id>/colloborators', methods=['DELETE'], strict_slashes=False)
 def deleteAgrColloborator(agreement_id):
     user_id = request.json.get('user_id')
     sql = f"SELECT distinct application_id from application join project using(project_id) join agreement using(project_id)  where agreement_id = {agreement_id}"
@@ -211,7 +211,7 @@ def deleteAgrColloborator(agreement_id):
 
 
 #for director, Create
-@bp.route('/<int:agreement_id>/approvers', methods=['POST'])
+@bp.route('/<int:agreement_id>/approvers', methods=['POST'], strict_slashes=False)
 def inviteAgreementApprover(agreement_id):
     user_id = request.json.get('user_id')
     try:
@@ -232,7 +232,7 @@ def inviteAgreementApprover(agreement_id):
 
 
 #for director, Update
-@bp.route('/<int:agreement_id>/approvers',methods=['PUT'])
+@bp.route('/<int:agreement_id>/approvers',methods=['PUT'], strict_slashes=False)
 def assignApproverPermission(agreement_id):
     permission = request.json.get('permission')
     user_id = request.json.get('user_id')
@@ -246,7 +246,7 @@ def assignApproverPermission(agreement_id):
 
 
 #for director, Delete
-@bp.route('/<int:agreement_id>/approvers', methods=['DELETE'])
+@bp.route('/<int:agreement_id>/approvers', methods=['DELETE'], strict_slashes=False)
 def deleteAgreementApprover(agreement_id):
     approver_id = request.json.get('user_id')
     try:
@@ -268,7 +268,7 @@ def deleteAgreementApprover(agreement_id):
 
 
 #for researcher
-@bp.route('/<int:agreement_id>', methods=['PUT'])
+@bp.route('/<int:agreement_id>', methods=['PUT'], strict_slashes=False)
 def saveAgreement(agreement_id):
     content = request.json.get('content')
     content_html = request.json.get('content_html')
@@ -289,7 +289,7 @@ def saveAgreement(agreement_id):
 
 
 #for researcher
-@bp.route('/<int:agreement_id>', methods=['POST'])
+@bp.route('/<int:agreement_id>', methods=['POST'], strict_slashes=False)
 def submitAgreement(agreement_id):
     content = request.json.get('content')
     agr_state = int(request.json.get('state'))
@@ -314,7 +314,7 @@ def submitAgreement(agreement_id):
 
 
 #for approver
-@bp.route('/<int:agreement_id>/suggestion', methods=['POST'])
+@bp.route('/<int:agreement_id>/suggestion', methods=['POST'], strict_slashes=False)
 def commentAgreement(agreement_id):
     user_id = int(request.headers.get('user_id'))
     comments = request.json.get('comments')
@@ -326,7 +326,7 @@ def commentAgreement(agreement_id):
     return jsonify({'ok':1})
 
 
-@bp.route('/<int:agreement_id>/comments', methods=['POST'])
+@bp.route('/<int:agreement_id>/comments', methods=['POST'], strict_slashes=False)
 def postAgreementComment(agreement_id):
     user_id = request.headers.get('user_id')
     comments = request.json.get('content')
@@ -339,7 +339,7 @@ def postAgreementComment(agreement_id):
         return jsonify({'ok':1})
 
 
-@bp.route('/<int:agreement_id>/comments')
+@bp.route('/<int:agreement_id>/comments', strict_slashes=False)
 def getAgreementComments(agreement_id):
     sql = f"SELECT c.user_id AS user_id, u.user_name AS user_name, c.comments AS content, c.created_time AS created_time \
             FROM comments c \
@@ -354,7 +354,7 @@ def getAgreementComments(agreement_id):
         return jsonify({'ok':0})
 
 
-@bp.route('/<int:agreement_id>/history')
+@bp.route('/<int:agreement_id>/history', strict_slashes=False)
 def getAgreementHistory(agreement_id):
     sql = f"SELECT agreement_id, content, version, created_time, agr_state, altered_time \
 FROM agreement \
